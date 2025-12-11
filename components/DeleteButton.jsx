@@ -2,8 +2,11 @@
 
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 export default function DeleteIcon({ id, onDelete }) {
+  const [hover, setHover] = useState(false);
+
   const handleDelete = async () => {
     if (!confirm("Delete this school?")) return;
 
@@ -15,7 +18,7 @@ export default function DeleteIcon({ id, onDelete }) {
 
     if (res.ok) {
       toast.success("School deleted!");
-      onDelete(id); // instantly remove from UI
+      onDelete(id);
     } else {
       toast.error(data.error || "Failed to delete");
     }
@@ -24,13 +27,28 @@ export default function DeleteIcon({ id, onDelete }) {
   return (
     <button
       onClick={handleDelete}
-      className="
-        absolute top-2 right-2 
-        bg-white/80 backdrop-blur-xl
-        hover:bg-red-600 hover:text-white
-        text-red-600 p-2 rounded-full 
-        shadow-md transition-all
-      "
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+
+        padding: "7px",
+        borderRadius: "50%",
+        cursor: "pointer",
+        border: "none",
+
+        background: hover
+          ? "#dc2626" // red
+          : "rgba(255,255,255,0.85)",
+
+        color: hover ? "#ffffff" : "#dc2626",
+
+        boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+        backdropFilter: "blur(10px)",
+        transition: "0.25s ease",
+      }}
     >
       <Trash2 size={16} />
     </button>

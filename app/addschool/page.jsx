@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import BackButton from "@/components/BackButton";
 
 export default function AddSchool() {
   const [loading, setLoading] = useState(false);
@@ -15,28 +14,14 @@ export default function AddSchool() {
     formState: { errors },
   } = useForm();
 
-  // 🔥 Show toast when a required field is missing
-  const onError = (errors) => {
-    const firstError = Object.values(errors)[0];
-
-    if (firstError?.type === "required") {
-      toast.error(`${firstError.message || "This field is required"}`);
-    } else if (firstError?.message) {
-      toast.error(firstError.message);
-    }
-  };
-
   const onSubmit = async (data) => {
     try {
       setLoading(true);
 
       const formData = new FormData();
-      Object.keys(data).forEach((key) => {
-        if (key === "image") {
-          formData.append("image", data.image[0]);
-        } else {
-          formData.append(key, data[key]);
-        }
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "image") formData.append("image", value[0]);
+        else formData.append(key, value);
       });
 
       const res = await fetch("/api/schools", {
@@ -45,15 +30,11 @@ export default function AddSchool() {
       });
 
       const result = await res.json();
-
       if (res.ok) {
         toast.success("School added successfully!");
         reset();
-      } else {
-        toast.error(result.error || "Something went wrong");
-      }
-    } catch (error) {
-      console.error(error);
+      } else toast.error(result.error || "Something went wrong");
+    } catch {
       toast.error("Server error");
     } finally {
       setLoading(false);
@@ -61,112 +42,259 @@ export default function AddSchool() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-xl">
-        {/* Back Button */}
-        <div className="mb-4">
-          <BackButton />
-        </div>
+    <>
+      {/* Inline Animation */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
 
-        <form
-          onSubmit={handleSubmit(onSubmit, onError)}
-          className="
-            w-full max-w-xl p-8
-            rounded-2xl backdrop-blur-xl bg-white/10 
-            shadow-2xl border border-white/10 
-            space-y-6 animate-fadeIn
-          "
+      {/* Page Background */}
+      <div
+        style={{
+          minHeight: "100vh",
+          padding: "40px 20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "radial-gradient(circle at top left, #0f172a, #000000)",
+        }}
+      >
+        {/* Back Button */}
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            position: "absolute",
+            top: 25,
+            left: 25,
+            padding: "8px 14px",
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            borderRadius: "8px",
+            color: "white",
+            fontWeight: 600,
+            cursor: "pointer",
+            backdropFilter: "blur(10px)",
+          }}
         >
-          <h2 className="text-3xl font-bold text-center text-white tracking-wide">
+          ← Back
+        </button>
+
+        {/* Glass Card */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "90%",
+            maxWidth: "600px",
+            padding: "50px",
+            borderRadius: "18px",
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            boxShadow: "0 18px 40px rgba(0,0,0,0.5)",
+            backdropFilter: "blur(14px)",
+            animation: "fadeIn 0.35s ease",
+          }}
+        >
+          {/* Title */}
+          <h2
+            style={{
+              textAlign: "center",
+              fontSize: "30px",
+              fontWeight: "700",
+              marginBottom: "25px",
+              color: "#fff",
+            }}
+          >
             Add School
           </h2>
 
-          {/* School Name */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">School Name *</label>
-            <input
-              {...register("name", { required: "School name is required" })}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter school name"
-            />
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Inputs */}
+            {inputField(
+              "School Name *",
+              "name",
+              register,
+              errors,
+              {
+                required: "School name is required",
+                minLength: { value: 3, message: "Minimum 3 characters" },
+                maxLength: { value: 60, message: "Maximum 60 characters" },
+              }
+            )}
 
-          {/* Address */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">Address *</label>
-            <textarea
-              {...register("address", { required: "Address is required" })}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter address"
-            />
-          </div>
+            {textAreaField(
+              "Address *",
+              "address",
+              register,
+              errors,
+              {
+                required: "Address is required",
+                minLength: { value: 5, message: "Minimum 5 characters" },
+              }
+            )}
 
-          {/* City */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">City *</label>
-            <input
-              {...register("city", { required: "City is required" })}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter city"
-            />
-          </div>
+            {inputField(
+              "City *",
+              "city",
+              register,
+              errors,
+              {
+                required: "City is required",
+              }
+            )}
 
-          {/* State */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">State</label>
-            <input
-              {...register("state")}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter state"
-            />
-          </div>
+            {inputField(
+              "State",
+              "state",
+              register,
+              errors
+            )}
 
-          {/* Contact */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">Contact *</label>
-            <input
-              {...register("contact", { required: "Contact is required" })}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter contact number"
-            />
-          </div>
+            {inputField(
+              "Contact *",
+              "contact",
+              register,
+              errors,
+              {
+                required: "Contact number is required",
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: "Enter a valid 10-digit number",
+                },
+              }
+            )}
 
-          {/* Email */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">Email *</label>
-            <input
-              {...register("email_id", {
+            {inputField(
+              "Email *",
+              "email_id",
+              register,
+              errors,
+              {
                 required: "Email is required",
                 pattern: {
                   value: /\S+@\S+\.\S+/,
                   message: "Invalid email format",
                 },
-              })}
-              className="w-full p-3 rounded-lg bg-white/20 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter email"
-            />
-          </div>
+              }
+            )}
 
-          {/* Image */}
-          <div className="space-y-1">
-            <label className="font-medium text-gray-100">Image *</label>
+            {/* File Upload */}
+            <label style={labelStyle}>Image *</label>
             <input
               type="file"
-              {...register("image", { required: "Image is required" })}
-              className="w-full p-2 rounded-lg bg-white/10 border border-white/20 text-gray-200 cursor-pointer"
+              accept="image/png, image/jpeg"
+              {...register("image", {
+                required: "Image is required",
+                validate: {
+                  fileSize: (files) =>
+                    files[0]?.size < 2 * 1024 * 1024 ||
+                    "Image must be under 2MB",
+                },
+              })}
+              style={fileStyle}
             />
-          </div>
+            {errors.image && (
+              <p style={errorMessage}>{errors.image.message}</p>
+            )}
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white shadow-xl transition-all duration-300 disabled:bg-gray-600 disabled:cursor-not-allowed"
-          >
-            {loading ? "Submitting..." : "Submit"}
-          </button>
-        </form>
+            {/* Submit Button */}
+            <button
+              disabled={loading}
+              type="submit"
+              style={{
+                marginTop: "28px",
+                width: "100%",
+                padding: "14px",
+                border: "none",
+                borderRadius: "12px",
+                background: loading
+                  ? "gray"
+                  : "linear-gradient(135deg, #2563eb, #1e40af)",
+                color: "white",
+                fontSize: "17px",
+                fontWeight: 600,
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "0.25s",
+              }}
+            >
+              {loading ? "Submitting..." : "Submit"}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
+  );
+}
+
+/* ------------------ INLINE STYLES ------------------ */
+
+const labelStyle = {
+  marginTop: "16px",
+  marginBottom: "6px",
+  display: "block",
+  color: "#e5e7eb",
+  fontWeight: 500,
+};
+
+const inputBase = {
+  width: "100%",
+  padding: "13px 15px",
+  borderRadius: "10px",
+  fontSize: "15px",
+  background: "rgba(255,255,255,0.08)",
+  color: "white",
+  border: "1px solid rgba(255,255,255,0.18)",
+  outline: "none",
+};
+
+const textAreaBase = {
+  ...inputBase,
+  height: "90px",
+  resize: "none",
+};
+
+const fileStyle = {
+  ...inputBase,
+  padding: "10px",
+};
+
+const errorMessage = {
+  color: "#f87171",
+  fontSize: "13px",
+  marginTop: "4px",
+};
+
+/* ------------------ FIELD HELPERS ------------------ */
+
+function inputField(label, name, register, errors, validation = {}) {
+  return (
+    <>
+      <label style={labelStyle}>{label}</label>
+      <input
+        {...register(name, validation)}
+        placeholder={label}
+        style={inputBase}
+      />
+      {errors[name] && <p style={errorMessage}>{errors[name].message}</p>}
+    </>
+  );
+}
+
+function textAreaField(label, name, register, errors, validation = {}) {
+  return (
+    <>
+      <label style={labelStyle}>{label}</label>
+      <textarea
+        {...register(name, validation)}
+        placeholder={label}
+        style={textAreaBase}
+      />
+      {errors[name] && <p style={errorMessage}>{errors[name].message}</p>}
+    </>
   );
 }

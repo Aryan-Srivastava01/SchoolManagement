@@ -1,23 +1,30 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function BackButton() {
-  const router = useRouter();
-
+export default function BackButton({ href = "/" }) {
   return (
-    <button
-      onClick={() => router.back()}
-      className="
-        flex items-center gap-2 px-4 py-2
-        rounded-xl bg-white/10 border border-white/20 
-        text-white font-medium 
-        hover:bg-white/20 transition-all duration-200 
-        shadow-md backdrop-blur-xl
-        cursor-pointer
-      "
-    >
-      ← Back
-    </button>
+    <div style={{ display: "flex", justifyContent: "flex-start", width: "100%" }}>
+      <Link href={href}>
+        <button
+          aria-label="Go back"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "6px 10px",
+            borderRadius: 6,
+            border: "1px solid rgba(255,255,255,0.12)",
+            background: "rgba(255,255,255,0.03)",
+            color: "#e6eef8",
+            fontWeight: 600,
+            cursor: "pointer",
+            boxShadow: "0 6px 14px rgba(0,0,0,0.4)",
+          }}
+        >
+          ← Back
+        </button>
+      </Link>
+    </div>
   );
 }

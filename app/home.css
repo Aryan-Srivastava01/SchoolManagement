@@ -1,0 +1,91 @@
+/* Main centered container */
+.home-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Glass Panel */
+.home-panel {
+  background: rgba(30, 30, 30, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 50px;
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Title */
+.home-title {
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 45px;
+}
+
+/* Two cards layout */
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Single card */
+.card {
+  width: 260px;
+  background: rgba(40, 40, 40, 0.55);
+  border-radius: 15px;
+  padding: 30px 20px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Circular Icon */
+.card-icon {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  margin: 0 auto 15px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color: white;
+}
+
+/* Blue Icon */
+.icon-blue {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+/* Green Icon */
+.icon-green {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+/* Card Title */
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* Card Subtitle */
+.card-sub {
+  color: #d1d5db;
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.4;
+}
