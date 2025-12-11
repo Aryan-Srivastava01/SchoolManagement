@@ -43,7 +43,7 @@ export default function AddSchool() {
 
   return (
     <>
-      {/* Inline Animation */}
+      {/* FIXED → Inline animation must be inside return */}
       <style>
         {`
           @keyframes fadeIn {
@@ -53,7 +53,6 @@ export default function AddSchool() {
         `}
       </style>
 
-      {/* Page Background */}
       <div
         style={{
           minHeight: "100vh",
@@ -64,7 +63,6 @@ export default function AddSchool() {
           background: "radial-gradient(circle at top left, #0f172a, #000000)",
         }}
       >
-        {/* Back Button */}
         <button
           onClick={() => window.history.back()}
           style={{
@@ -84,11 +82,8 @@ export default function AddSchool() {
           ← Back
         </button>
 
-        {/* Glass Card */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
             width: "90%",
             maxWidth: "600px",
             padding: "50px",
@@ -100,7 +95,6 @@ export default function AddSchool() {
             animation: "fadeIn 0.35s ease",
           }}
         >
-          {/* Title */}
           <h2
             style={{
               textAlign: "center",
@@ -114,7 +108,6 @@ export default function AddSchool() {
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Inputs */}
             {inputField(
               "School Name *",
               "name",
@@ -123,7 +116,6 @@ export default function AddSchool() {
               {
                 required: "School name is required",
                 minLength: { value: 3, message: "Minimum 3 characters" },
-                maxLength: { value: 60, message: "Maximum 60 characters" },
               }
             )}
 
@@ -138,22 +130,8 @@ export default function AddSchool() {
               }
             )}
 
-            {inputField(
-              "City *",
-              "city",
-              register,
-              errors,
-              {
-                required: "City is required",
-              }
-            )}
-
-            {inputField(
-              "State",
-              "state",
-              register,
-              errors
-            )}
+            {inputField("City *", "city", register, errors, { required: "City is required" })}
+            {inputField("State", "state", register, errors)}
 
             {inputField(
               "Contact *",
@@ -183,7 +161,6 @@ export default function AddSchool() {
               }
             )}
 
-            {/* File Upload */}
             <label style={labelStyle}>Image *</label>
             <input
               type="file"
@@ -202,7 +179,6 @@ export default function AddSchool() {
               <p style={errorMessage}>{errors.image.message}</p>
             )}
 
-            {/* Submit Button */}
             <button
               disabled={loading}
               type="submit"
@@ -231,7 +207,7 @@ export default function AddSchool() {
   );
 }
 
-/* ------------------ INLINE STYLES ------------------ */
+/* INLINE STYLES */
 
 const labelStyle = {
   marginTop: "16px",
@@ -269,7 +245,7 @@ const errorMessage = {
   marginTop: "4px",
 };
 
-/* ------------------ FIELD HELPERS ------------------ */
+/* HELPERS */
 
 function inputField(label, name, register, errors, validation = {}) {
   return (
