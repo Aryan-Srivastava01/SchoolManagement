@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import fs from "fs";
@@ -17,10 +19,8 @@ export async function POST(req) {
     const imageFile = formData.get("image");
 
     // Validate required fields
-    if (!name || !address || !city || !state || !contact || !email || !imageFile) {
-      return new Response(JSON.stringify({ error: "All fields are required" }), {
-        status: 400,
-      });
+    if (!name || !address || !city || !contact || !email || !imageFile) {
+      return Response.json({ error: "All fields are required" }, { status: 400 });
     }
 
     // Prepare folder path
@@ -55,13 +55,11 @@ export async function POST(req) {
       },
     });
 
-    return new Response(JSON.stringify(newSchool), { status: 201 });
+    return Response.json(newSchool, { status: 201 });
 
   } catch (error) {
     console.error("Error adding school:", error);
-    return new Response(JSON.stringify({ error: "Server error" }), {
-      status: 500,
-    });
+    return Response.json({ error: "Server error" }, { status: 500 });
   }
 }
 
@@ -69,37 +67,31 @@ export async function POST(req) {
 export async function GET() {
   try {
     const schools = await prisma.school.findMany();
-    return new Response(JSON.stringify(schools), { status: 200 });
+    return Response.json(schools, { status: 200 });
   } catch (error) {
     console.error("Error fetching schools:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch schools" }), {
-      status: 500,
-    });
+    return Response.json({ error: "Failed to fetch schools" }, { status: 500 });
   }
 }
 
+// ---------- DELETE ----------
 export async function DELETE(req) {
   try {
     const { searchParams } = new URL(req.url);
     const id = Number(searchParams.get("id"));
 
     if (!id) {
-      return new Response(JSON.stringify({ error: "Missing ID" }), { status: 400 });
+      return Response.json({ error: "Missing ID" }, { status: 400 });
     }
 
     await prisma.school.delete({
       where: { id },
     });
 
-    return new Response(JSON.stringify({ message: "Deleted successfully" }), {
-      status: 200,
-    });
+    return Response.json({ message: "Deleted successfully" }, { status: 200 });
 
   } catch (error) {
     console.error("DELETE error:", error);
-    return new Response(JSON.stringify({ error: "Server error" }), {
-      status: 500,
-    });
+    return Response.json({ error: "Server error" }, { status: 500 });
   }
 }
-
