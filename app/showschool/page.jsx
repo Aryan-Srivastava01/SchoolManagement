@@ -9,12 +9,12 @@ export default function ShowSchools() {
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  
 
   useEffect(() => {
     async function fetchSchools() {
       try {
-        const res = await fetch(`${baseUrl}/api/schools`, { cache: "no-store" });
+        const res = await fetch(`/api/schools`, { cache: "no-store" });
         const data = await res.json();
         setSchools(data);
       } catch (err) {
