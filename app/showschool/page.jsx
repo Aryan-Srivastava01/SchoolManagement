@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DeleteIcon from "@/components/DeleteButton";
-import BackButton from "@/components/BackButton";
+import DeleteIcon from "../../components/DeleteButton";
+import BackButton from "../../components/BackButton";
 import toast from "react-hot-toast";
 
 export default function ShowSchools() {
